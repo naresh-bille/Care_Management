@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EntityScan("com.example.care_management_system.entity")
-//@EnableJpaRepositories("com.example.care_management_system.repository")
+@EnableJpaRepositories("com.example.care_management_system.repository")
 public class CareManagementSystemApplication {
 
 	public static void main(String[] args) {
