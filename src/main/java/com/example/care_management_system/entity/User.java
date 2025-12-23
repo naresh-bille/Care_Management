@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.List;
-//import java.util.UUID;
 
 @Entity
 //@Data
@@ -31,6 +30,29 @@ public class User {
 
 	public User() {
 		super();
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	@Enumerated(EnumType.STRING)
+    private Role role; // USER or ADMIN
+	
+	
+	public void setAdminSecretKey(String adminSecretKey) {
+		this.adminSecretKey = adminSecretKey;
+	}
+
+	private String adminSecretKey;
+
+	
+	public String getAdminSecretKey() {
+		return adminSecretKey;
 	}
 
 	@Override
@@ -119,4 +141,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets;
+
+	
 }

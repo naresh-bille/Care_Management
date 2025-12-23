@@ -29,6 +29,9 @@ public class PetService {
     private AuthService authService;
 
     public Pet addPet(PetRequest request) {
+    	
+    	System.out.println("tus is a addpet request methosd");
+    	
         logger.info("Adding new pet: {}", request.getName());
         String email = authService.getLoggedInUsername();
         User user = userRepository.findByEmail(email)

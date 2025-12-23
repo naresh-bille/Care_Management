@@ -1,5 +1,7 @@
 package com.example.care_management_system.dto;
 
+import com.example.care_management_system.entity.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -10,6 +12,29 @@ public class AuthRequest {
     @Email(message = "Invalid email format")
     private String email;
 
+    
+    private Role role; // USER / ADMIN
+    
+    
+    
+    public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public String getAdminSecretKey() {
+		return adminSecretKey;
+	}
+
+	public void setAdminSecretKey(String adminSecretKey) {
+		this.adminSecretKey = adminSecretKey;
+	}
+
+	private String adminSecretKey; // optional
+    
     public String getEmail() {
 		return email;
 	}

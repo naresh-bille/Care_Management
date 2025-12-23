@@ -25,7 +25,8 @@ public class ScheduleBookingController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(@Valid @RequestBody BookingRequest request) {
-        logger.info("Creating booking for resourceId: {}, type: {}", request.getResourceId(), request.getResourceType());
+       System.err.print("...........bookingsssssssssssssssssssss");
+    	logger.info("Creating booking for resourceId: {}, type: {}", request.getResourceId(), request.getResourceType());
 
         BookingResponse booking = bookingService.createBooking(request);
 

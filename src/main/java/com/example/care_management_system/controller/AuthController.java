@@ -1,7 +1,10 @@
 package com.example.care_management_system.controller;
 
 import com.example.care_management_system.dto.AuthRequest;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.example.care_management_system.dto.JwtResponse;
+import com.example.care_management_system.entity.Role;
 import com.example.care_management_system.entity.User;
 import com.example.care_management_system.exception.GlobalExceptionHandler;
 import com.example.care_management_system.repository.UserRepository;
@@ -10,6 +13,7 @@ import com.example.care_management_system.service.EmailService;
 import com.example.care_management_system.service.MyUserDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -45,28 +49,76 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
+    
+    
+    @Value("${admin.secret.key}")
+    private String adminSecretKey;
 
     AuthController(GlobalExceptionHandler globalExceptionHandler) {
         this.globalExceptionHandler = globalExceptionHandler;
     }
 
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> registerUser(@RequestBody User user) {
+//    	
+//    	if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+//            return ResponseEntity.badRequest().body("Email already in use");
+//        }
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        userRepository.save(user);
+//
+//        String subject = "Welcome to Care Management System!";
+//        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
+//        emailService.sendMail(user.getEmail(), subject, text);
+//        emailService.sendMail("nareshbille22@gmail.com", subject, text);
+//
+//        return ResponseEntity.ok("User registered successfully");
+//    }
+    
+    
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-    	
-    	if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public ResponseEntity<?> registerUser(@RequestBody User request) {
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already in use");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // 🔐 ADMIN SECRET KEY CHECK
+        if (request.getRole() == Role.ADMIN) {
+
+            if (request.getAdminSecretKey() == null ||
+                !request.getAdminSecretKey().equals(adminSecretKey)) {
+
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Invalid admin secret key");
+            }
+
+            user.setRole(Role.ADMIN);
+        } else {
+            user.setRole(Role.USER);
+        }
+
         userRepository.save(user);
 
         String subject = "Welcome to Care Management System!";
-        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
-//        emailService.sendMail(user.getEmail(), subject, text);
-//        emailService.sendMail("nareshbille22@gmail.com", subject, text);
+        String text = "Hi " + user.getName() +
+                ",\n\nYour account has been created successfully as " +
+                user.getRole();
+
+        emailService.sendMail(user.getEmail(), subject, text);
 
         return ResponseEntity.ok("User registered successfully");
     }
 
+    
+    
+    
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthRequest authRequest) throws BadCredentialsException  {
         try {

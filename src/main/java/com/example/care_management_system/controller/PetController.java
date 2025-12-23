@@ -24,6 +24,8 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Pet>> addPet(@RequestBody PetRequest request) {
+    	
+    	System.err.print(" this is a pet controllerr...........");
         logger.info("Received request to add pet");
         Pet pet = petService.addPet(request);
         return ResponseEntity.status(201).body(new ApiResponse<>(pet));
