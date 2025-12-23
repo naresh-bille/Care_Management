@@ -61,8 +61,8 @@ public class AuthController {
 
         String subject = "Welcome to Care Management System!";
         String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
-        emailService.sendMail(user.getEmail(), subject, text);
-        emailService.sendMail("nareshbille22@gmail.com", subject, text);
+//        emailService.sendMail(user.getEmail(), subject, text);
+//        emailService.sendMail("nareshbille22@gmail.com", subject, text);
 
         return ResponseEntity.ok("User registered successfully");
     }
@@ -88,8 +88,8 @@ public class AuthController {
 
         String subject = "Login alert for "+ authRequest.getEmail();
         String text = "New login detected.." + "\n\n DateTime : " + LocalDateTime.now().toString();
-        emailService.sendMail(authRequest.getEmail(), subject, text);
-        emailService.sendMail("nareshbille22@gmail.com", subject, text);
+//        emailService.sendMail(authRequest.getEmail(), subject, text);
+//        emailService.sendMail("nareshbille22@gmail.com", subject, text);
 
         return ResponseEntity.ok(response);
     }
